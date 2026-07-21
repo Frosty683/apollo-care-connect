@@ -158,6 +158,22 @@ const aiSummary = {
 };
 
 function AiConsultationCompanionPage() {
+  const [showSummary, setShowSummary] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+
+  const handleGenerate = () => {
+    if (showSummary) {
+      toast("AI summary is already displayed");
+      return;
+    }
+    setIsGenerating(true);
+    setTimeout(() => {
+      setIsGenerating(false);
+      setShowSummary(true);
+      toast("AI consultation summary generated");
+    }, 1400);
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <AppNav />
