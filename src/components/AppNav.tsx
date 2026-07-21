@@ -27,6 +27,7 @@ export function AppNav() {
           <Link to="/reminders" className={linkCls} activeProps={{ className: "text-primary" }}>Reminders</Link>
           <Link to="/records" className={linkCls} activeProps={{ className: "text-primary" }}>Records</Link>
           <Link to="/symptom-checker" className={linkCls} activeProps={{ className: "text-primary" }}>Symptom Checker</Link>
+          <Link to="/ai-consultation-companion" className={linkCls} activeProps={{ className: "text-primary" }}>AI Companion</Link>
         </nav>
         {email ? (
           <Button
