@@ -699,10 +699,8 @@ function AiConsultationCompanionPage() {
                       <div className="flex items-start gap-2">
                         <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
                         <p className="text-xs text-amber-800 leading-relaxed">
-                          This explanation is for general information only and is
-                          not a substitute for professional medical advice. Please
-                          consult your doctor before making any decisions about
-                          your health, diet, or medication.
+                          This explanation is for educational purposes only and
+                          does not replace professional medical advice.
                         </p>
                       </div>
                     </div>
