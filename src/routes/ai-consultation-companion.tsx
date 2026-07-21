@@ -14,7 +14,6 @@ import {
   Sparkles,
   AlertTriangle,
   Stethoscope,
-  HeartPulse,
   Apple,
 } from "lucide-react";
 
