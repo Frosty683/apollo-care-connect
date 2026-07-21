@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
@@ -10,6 +11,11 @@ import {
   MessageSquare,
   Pill,
   Calendar,
+  Sparkles,
+  AlertTriangle,
+  Stethoscope,
+  HeartPulse,
+  Apple,
 } from "lucide-react";
 
 export const Route = createFileRoute("/ai-consultation-companion")({
