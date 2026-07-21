@@ -35,7 +35,7 @@ const demoPatient = {
   diagnoses: ["Mild Hypertension", "Type 2 Diabetes Mellitus"],
   medicines: [
     { name: "Metformin", dosage: "500 mg", frequency: "Twice daily", timing: "After breakfast and dinner", purpose: "Helps your body use insulin better and lowers blood sugar." },
-    { name: "Amlodipine", dosage: "5 mg", frequency: "Once daily", timing: "In the morning", purpose: "Relaxes blood vessels to reduce blood pressure and heartbroken here due to length" },
+    { name: "Amlodipine", dosage: "5 mg", frequency: "Once daily", timing: "In the morning", purpose: "Relaxes and widens blood vessels to lower blood pressure and improve circulation." },
   ],
 };
 
