@@ -9,11 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SymptomCheckerRouteImport } from './routes/symptom-checker'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as IndexRouteImport } from './routes/index'
 
+const SymptomCheckerRoute = SymptomCheckerRouteImport.update({
+  id: '/symptom-checker',
+  path: '/symptom-checker',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const RemindersRoute = RemindersRouteImport.update({
   id: '/reminders',
   path: '/reminders',
@@ -40,12 +46,14 @@ export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/symptom-checker': typeof SymptomCheckerRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/symptom-checker': typeof SymptomCheckerRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -53,13 +61,20 @@ export interface FileRoutesById {
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
+  '/symptom-checker': typeof SymptomCheckerRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/records' | '/reminders'
+  fullPaths: '/' | '/auth' | '/records' | '/reminders' | '/symptom-checker'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/records' | '/reminders'
-  id: '__root__' | '/' | '/auth' | '/records' | '/reminders'
+  to: '/' | '/auth' | '/records' | '/reminders' | '/symptom-checker'
+  id:
+    | '__root__'
+    | '/'
+    | '/auth'
+    | '/records'
+    | '/reminders'
+    | '/symptom-checker'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -67,10 +82,18 @@ export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
+  SymptomCheckerRoute: typeof SymptomCheckerRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/symptom-checker': {
+      id: '/symptom-checker'
+      path: '/symptom-checker'
+      fullPath: '/symptom-checker'
+      preLoaderRoute: typeof SymptomCheckerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/reminders': {
       id: '/reminders'
       path: '/reminders'
@@ -107,6 +130,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
+  SymptomCheckerRoute: SymptomCheckerRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
