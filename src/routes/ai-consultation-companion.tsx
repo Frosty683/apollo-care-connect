@@ -115,6 +115,48 @@ const cards = [
   },
 ];
 
+const aiSummary = {
+  diagnosis:
+    "Mild Hypertension and Type 2 Diabetes Mellitus — both conditions are currently stable on medication. Blood pressure is mildly elevated at 142/88 mmHg, and HbA1c is 7.1%, indicating reasonable long-term glucose control.",
+  advice: [
+    "Continue Metformin and Amlodipine exactly as prescribed; do not skip doses.",
+    "Monitor home blood pressure twice weekly and fasting glucose twice weekly.",
+    "Reduce salt intake to under 5 grams per day and limit processed foods.",
+    "Aim for 150 minutes of moderate exercise per week, such as brisk walking.",
+  ],
+  medicines: [
+    {
+      name: "Metformin 500 mg",
+      explanation:
+        "Improves how your body responds to insulin and reduces sugar production in the liver. Take after meals to reduce stomach upset.",
+    },
+    {
+      name: "Amlodipine 5 mg",
+      explanation:
+        "Relaxes blood vessels so blood flows more easily, lowering blood pressure. Take in the morning for best effect.",
+    },
+  ],
+  lifestyle: [
+    "Follow a balanced, low-sodium diet rich in vegetables, whole grains, and lean protein.",
+    "Maintain a healthy weight and avoid sugary drinks and refined carbohydrates.",
+    "Get 7–8 hours of quality sleep and manage stress through light yoga or breathing exercises.",
+    "Avoid smoking and limit alcohol consumption.",
+  ],
+  warningSigns: [
+    "Blood pressure above 160/100 mmHg on repeated readings",
+    "Fasting glucose persistently above 250 mg/dL",
+    "Chest pain, severe headache, or sudden vision changes",
+    "Shortness of breath, swelling in legs, or confusion",
+  ],
+  nextAppointment: {
+    date: "18 August 2026 at 10:30 AM",
+    doctor: "Dr. Priya Sharma",
+    notes:
+      "Bring your home BP and glucose log, current medication boxes, and prior test reports.",
+    tests: "Fasting lipid profile, HbA1c, serum creatinine",
+  },
+};
+
 function AiConsultationCompanionPage() {
   return (
     <div className="min-h-screen bg-background">
