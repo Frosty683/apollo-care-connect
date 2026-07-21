@@ -199,6 +199,15 @@ function AiConsultationCompanionPage() {
         <div className="flex flex-wrap gap-3 mb-8">
           <Button
             size="lg"
+            onClick={handleGenerate}
+            disabled={isGenerating}
+          >
+            <Sparkles className="h-4 w-4 mr-2" />
+            {isGenerating ? "Generating summary..." : "Generate AI Summary"}
+          </Button>
+          <Button
+            size="lg"
+            variant="outline"
             onClick={() => toast("Upload Medical Report coming soon")}
           >
             <Upload className="h-4 w-4 mr-2" />
