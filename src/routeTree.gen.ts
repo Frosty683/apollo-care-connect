@@ -13,6 +13,7 @@ import { Route as SymptomCheckerRouteImport } from './routes/symptom-checker'
 import { Route as RemindersRouteImport } from './routes/reminders'
 import { Route as RecordsRouteImport } from './routes/records'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AiConsultationCompanionRouteImport } from './routes/ai-consultation-companion'
 import { Route as IndexRouteImport } from './routes/index'
 
 const SymptomCheckerRoute = SymptomCheckerRouteImport.update({
@@ -35,6 +36,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiConsultationCompanionRoute = AiConsultationCompanionRouteImport.update({
+  id: '/ai-consultation-companion',
+  path: '/ai-consultation-companion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -43,6 +49,7 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai-consultation-companion': typeof AiConsultationCompanionRoute
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
@@ -50,6 +57,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai-consultation-companion': typeof AiConsultationCompanionRoute
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
@@ -58,6 +66,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai-consultation-companion': typeof AiConsultationCompanionRoute
   '/auth': typeof AuthRoute
   '/records': typeof RecordsRoute
   '/reminders': typeof RemindersRoute
@@ -65,12 +74,25 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/auth' | '/records' | '/reminders' | '/symptom-checker'
+  fullPaths:
+    | '/'
+    | '/ai-consultation-companion'
+    | '/auth'
+    | '/records'
+    | '/reminders'
+    | '/symptom-checker'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/auth' | '/records' | '/reminders' | '/symptom-checker'
+  to:
+    | '/'
+    | '/ai-consultation-companion'
+    | '/auth'
+    | '/records'
+    | '/reminders'
+    | '/symptom-checker'
   id:
     | '__root__'
     | '/'
+    | '/ai-consultation-companion'
     | '/auth'
     | '/records'
     | '/reminders'
@@ -79,6 +101,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiConsultationCompanionRoute: typeof AiConsultationCompanionRoute
   AuthRoute: typeof AuthRoute
   RecordsRoute: typeof RecordsRoute
   RemindersRoute: typeof RemindersRoute
@@ -115,6 +138,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai-consultation-companion': {
+      id: '/ai-consultation-companion'
+      path: '/ai-consultation-companion'
+      fullPath: '/ai-consultation-companion'
+      preLoaderRoute: typeof AiConsultationCompanionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -127,6 +157,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiConsultationCompanionRoute: AiConsultationCompanionRoute,
   AuthRoute: AuthRoute,
   RecordsRoute: RecordsRoute,
   RemindersRoute: RemindersRoute,
@@ -135,13 +166,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
