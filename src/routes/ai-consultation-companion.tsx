@@ -26,26 +26,86 @@ export const Route = createFileRoute("/ai-consultation-companion")({
   component: AiConsultationCompanionPage,
 });
 
+const demoPatient = {
+  name: "Rajesh Kumar",
+  age: 56,
+  gender: "Male",
+  date: "21 July 2026",
+  doctor: "Dr. Priya Sharma",
+  diagnoses: ["Mild Hypertension", "Type 2 Diabetes Mellitus"],
+  medicines: [
+    { name: "Metformin", dosage: "500 mg", frequency: "Twice daily", timing: "After breakfast and dinner", purpose: "Helps your body use insulin better and lowers blood sugar." },
+    { name: "Amlodipine", dosage: "5 mg", frequency: "Once daily", timing: "In the morning", purpose: "Relaxes and widens blood vessels to lower blood pressure and improve circulation." },
+  ],
+};
+
 const cards = [
   {
     icon: ClipboardList,
     title: "Consultation Summary",
-    desc: "A concise overview of your visit and key takeaways.",
+    content: (
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Date:</span> {demoPatient.date}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Doctor:</span> {demoPatient.doctor}
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Reason for visit:</span> Routine follow-up for blood pressure and diabetes management.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Key findings:</span> BP 142/88 mmHg, fasting glucose 128 mg/dL, HbA1c 7.1%. Both conditions are stable with current therapy.
+        </p>
+      </div>
+    ),
   },
   {
     icon: MessageSquare,
     title: "Doctor's Advice",
-    desc: "Clear explanations of the guidance your doctor provided.",
+    content: (
+      <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-4">
+        <li>Limit salt to less than 5 g per day and reduce processed foods.</li>
+        <li>Walk briskly for 30 minutes at least 5 days a week.</li>
+        <li>Check fasting blood sugar twice weekly and record readings.</li>
+        <li>Maintain 7–8 hours of sleep and practice stress-reduction techniques.</li>
+      </ul>
+    ),
   },
   {
     icon: Pill,
     title: "Medicine Explanation",
-    desc: "What each medicine does and how to take it safely.",
+    content: (
+      <div className="space-y-3">
+        {demoPatient.medicines.map((med) => (
+          <div key={med.name} className="text-sm">
+            <p className="font-medium text-foreground">{med.name} — {med.dosage}</p>
+            <p className="text-muted-foreground">Take {med.frequency.toLowerCase()}, {med.timing.toLowerCase()}.</p>
+            <p className="text-muted-foreground">{med.purpose}</p>
+          </div>
+        ))}
+      </div>
+    ),
   },
   {
     icon: Calendar,
     title: "Next Follow-up",
-    desc: "Recommended next steps and follow-up timings.",
+    content: (
+      <div className="space-y-2">
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Appointment:</span> 18 August 2026 at 10:30 AM
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Bring:</span> Home BP and glucose log, current medication boxes.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Tests:</span> Fasting lipid profile, HbA1c, serum creatinine.
+        </p>
+        <p className="text-sm text-muted-foreground">
+          <span className="font-medium text-foreground">Urgent contact:</span> Reach the clinic if BP exceeds 160/100 mmHg or glucose is persistently above 250 mg/dL.
+        </p>
+      </div>
+    ),
   },
 ];
 
@@ -72,7 +132,7 @@ function AiConsultationCompanionPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-3 mb-10">
+        <div className="flex flex-wrap gap-3 mb-8">
           <Button
             size="lg"
             onClick={() => toast("Upload Medical Report coming soon")}
@@ -90,6 +150,40 @@ function AiConsultationCompanionPage() {
           </Button>
         </div>
 
+        <div
+          className="rounded-2xl border border-border bg-card p-6 mb-8"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+            <div>
+              <h2 className="text-lg font-semibold text-foreground">{demoPatient.name}</h2>
+              <p className="text-sm text-muted-foreground">{demoPatient.age} years • {demoPatient.gender}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {demoPatient.diagnoses.map((diagnosis) => (
+                <span
+                  key={diagnosis}
+                  className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary"
+                >
+                  {diagnosis}
+                </span>
+              ))}
+            </div>
+          </div>
+          <div className="mt-4 flex flex-wrap gap-2">
+            {demoPatient.medicines.map((med) => (
+              <span
+                key={med.name}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-medium bg-teal-50 text-teal-700 border border-teal-100"
+                style={{ backgroundColor: "rgba(0,153,230,0.08)", color: "var(--teal)" }}
+              >
+                <Pill className="h-3 w-3" />
+                {med.name} {med.dosage}
+              </span>
+            ))}
+          </div>
+        </div>
+
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {cards.map((card) => (
             <div
@@ -103,10 +197,10 @@ function AiConsultationCompanionPage() {
               >
                 <card.icon className="h-5 w-5" />
               </div>
-              <h3 className="text-base font-semibold text-foreground mb-2">
+              <h3 className="text-base font-semibold text-foreground mb-3">
                 {card.title}
               </h3>
-              <p className="text-sm text-muted-foreground">{card.desc}</p>
+              {card.content}
             </div>
           ))}
         </div>
