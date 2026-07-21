@@ -2,20 +2,17 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { AppNav } from "@/components/AppNav";
 import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
 import {
-  Bot,
-  Upload,
-  History,
-  ClipboardList,
-  MessageSquare,
-  Pill,
-  Calendar,
-  Sparkles,
-  AlertTriangle,
-  Stethoscope,
-  Apple,
-} from "lucide-react";
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+} from "@/components/ui/sheet";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { toast } from "sonner";
+import { Bot, Upload, History, ClipboardList, MessageSquare, Pill, Calendar, Sparkles, TriangleAlert as AlertTriangle, Stethoscope, Apple, FlaskConical, Info, HeartPulse } from "lucide-react";
 
 export const Route = createFileRoute("/ai-consultation-companion")({
   head: () => ({
@@ -156,9 +153,118 @@ const aiSummary = {
   },
 };
 
+type LabStatus = "normal" | "borderline" | "high";
+
+type LabResult = {
+  id: string;
+  name: string;
+  value: string;
+  unit: string;
+  icon: typeof FlaskConical;
+  status: LabStatus;
+  measures: string;
+  whyItMatters: string;
+  simpleExplanation: string;
+};
+
+const labResults: LabResult[] = [
+  {
+    id: "hba1c",
+    name: "HbA1c",
+    value: "6.8",
+    unit: "%",
+    icon: FlaskConical,
+    status: "borderline",
+    measures:
+      "HbA1c (glycated haemoglobin) reflects your average blood sugar over the past 2–3 months. Unlike a fasting sugar test, it shows the overall trend rather than a single moment.",
+    whyItMatters:
+      "It is the key marker used to diagnose and monitor diabetes. Higher values mean more sugar has been attached to your red blood cells over time, which can slowly damage blood vessels, nerves, kidneys, and eyes.",
+    simpleExplanation:
+      "Think of it as a 3-month average of your blood sugar. Your result of 6.8% is slightly above the normal range (below 5.7%). Between 5.7% and 6.4% is considered pre-diabetes, and 6.5% or above usually means diabetes. At 6.8% your sugar control needs attention, but it is not dangerously high — small changes in diet, activity, and medication can bring it down.",
+  },
+  {
+    id: "ldl",
+    name: "LDL Cholesterol",
+    value: "156",
+    unit: "mg/dL",
+    icon: HeartPulse,
+    status: "high",
+    measures:
+      "LDL (low-density lipoprotein) is often called 'bad' cholesterol. It carries cholesterol from the liver into the bloodstream, where it can settle on the walls of arteries and form plaques.",
+    whyItMatters:
+      "Over time, plaque narrows the arteries and reduces blood flow, raising the risk of heart attack and stroke. Keeping LDL low is one of the most effective ways to protect long-term heart health.",
+    simpleExplanation:
+      "Your LDL of 156 mg/dL is in the high range — ideally it should be under 100 mg/dL (or under 70 mg/dL if you have diabetes or existing heart disease). This doesn't mean something is wrong today, but it is a warning sign worth acting on. Less saturated fat, more fibre, regular walking, and sometimes medication can lower it steadily.",
+  },
+  {
+    id: "hdl",
+    name: "HDL Cholesterol",
+    value: "42",
+    unit: "mg/dL",
+    icon: HeartPulse,
+    status: "borderline",
+    measures:
+      "HDL (high-density lipoprotein) is the 'good' cholesterol. It acts like a clean-up crew, picking up excess cholesterol from the blood and carrying it back to the liver for removal.",
+    whyItMatters:
+      "Higher HDL helps clear the arteries and lowers the risk of heart disease. Low HDL means less of this protective cleaning is happening, which can work against you even if your other numbers look okay.",
+    simpleExplanation:
+      "Your HDL of 42 mg/dL is borderline — for men, 40 mg/dL or above is acceptable, but 60 mg/dL or more is considered protective. The good news is that exercise is the most effective way to raise HDL. Regular brisk walking, stopping smoking, and healthy fats (like nuts, olive oil, and fish) all help.",
+  },
+  {
+    id: "vitamin-d",
+    name: "Vitamin D",
+    value: "18",
+    unit: "ng/mL",
+    icon: FlaskConical,
+    status: "borderline",
+    measures:
+      "Vitamin D helps your body absorb calcium and phosphorus, the minerals that keep bones, teeth, and muscles strong. It also supports your immune system.",
+    whyItMatters:
+      "Long-term low vitamin D can lead to weak bones, bone pain, muscle aches, and a higher risk of falls in older adults. It has also been linked to tiredness and low mood.",
+    simpleExplanation:
+      "Your level of 18 ng/mL is considered insufficient — 30 ng/mL or above is generally adequate. This is very common, especially with limited sun exposure. A simple daily supplement, along with 15–20 minutes of morning sunlight a few times a week, usually brings it back to a healthy range within a few months.",
+  },
+  {
+    id: "blood-pressure",
+    name: "Blood Pressure",
+    value: "145/90",
+    unit: "mmHg",
+    icon: HeartPulse,
+    status: "high",
+    measures:
+      "Blood pressure is the force of blood pushing against your artery walls. The first number (systolic) is the pressure when the heart beats; the second (diastolic) is the pressure when the heart rests between beats.",
+    whyItMatters:
+      "If it stays high over time, the extra strain damages arteries, the heart, the brain, and the kidneys — increasing the risk of heart attack, stroke, and kidney disease. Because it usually has no symptoms, regular checking is the only way to catch it early.",
+    simpleExplanation:
+      "Your reading of 145/90 mmHg is high. A normal reading is below 120/80 mmHg; 120–129/80–89 is elevated; and 130/80 or above is generally considered hypertension. Yours is in Stage 1 hypertension. The good news is it often responds well to less salt, regular walking, weight management, and the medication you are already taking. Keep checking it at home and sharing the readings with your doctor.",
+  },
+];
+
+const statusConfig: Record<
+  LabStatus,
+  { label: string; className: string; dotClass: string }
+> = {
+  normal: {
+    label: "Normal",
+    className: "bg-emerald-50 text-emerald-700 border-emerald-200",
+    dotClass: "bg-emerald-500",
+  },
+  borderline: {
+    label: "Borderline",
+    className: "bg-amber-50 text-amber-700 border-amber-200",
+    dotClass: "bg-amber-500",
+  },
+  high: {
+    label: "High",
+    className: "bg-rose-50 text-rose-700 border-rose-200",
+    dotClass: "bg-rose-500",
+  },
+};
+
 function AiConsultationCompanionPage() {
   const [showSummary, setShowSummary] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [activeResult, setActiveResult] = useState<LabResult | null>(null);
 
   const handleGenerate = () => {
     if (showSummary) {
@@ -420,6 +526,192 @@ function AiConsultationCompanionPage() {
             </div>
           </div>
         )}
+
+        {/* Explain My Report section */}
+        <div
+          className="mt-10 rounded-2xl border border-border bg-card p-6 sm:p-8"
+          style={{ boxShadow: "var(--shadow-soft)" }}
+        >
+          <div className="flex items-center gap-3 mb-2">
+            <div
+              className="h-11 w-11 rounded-xl flex items-center justify-center text-teal-foreground"
+              style={{ backgroundColor: "var(--teal)" }}
+            >
+              <FlaskConical className="h-5 w-5" />
+            </div>
+            <div>
+              <h2 className="text-xl font-bold text-foreground">
+                Explain My Report
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Sample laboratory results — tap Explain on any test for a plain-language breakdown.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {labResults.map((result) => {
+              const status = statusConfig[result.status];
+              return (
+                <div
+                  key={result.id}
+                  className="group rounded-xl border border-border bg-background/60 p-4 transition-all hover:border-primary/30 hover:shadow-sm"
+                >
+                  <div className="flex items-start justify-between gap-3">\n                    <div className="flex items-start gap-3">
+                      <div
+                        className="h-10 w-10 rounded-lg flex items-center justify-center text-teal-foreground shrink-0"
+                        style={{ backgroundColor: "var(--teal)" }}
+                      >
+                        <result.icon className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold text-foreground">
+                          {result.name}
+                        </p>
+                        <p className="text-2xl font-bold text-foreground leading-tight">
+                          {result.value}
+                          <span className="ml-1 text-sm font-normal text-muted-foreground">
+                            {result.unit}
+                          </span>
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border ${status.className}`}
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full ${status.dotClass}`}
+                      />
+                      {status.label}
+                    </span>
+                  </div>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    className="mt-4 w-full group-hover:border-primary/40"
+                    onClick={() => setActiveResult(result)}
+                  >
+                    <Info className="h-3.5 w-3.5 mr-1.5" />
+                    Explain
+                  </Button>
+                </div>
+              );
+            })}
+          </div>
+
+          <p className="mt-6 text-xs text-muted-foreground leading-relaxed flex items-start gap-2">
+            <AlertTriangle className="h-3.5 w-3.5 mt-0.5 text-amber-500 shrink-0" />
+            <span>
+              These results are sample values for demonstration only. Always
+              discuss your actual reports with a qualified doctor before making
+              any health decisions.
+            </span>
+          </p>
+        </div>
+
+        <Sheet
+          open={activeResult !== null}
+          onOpenChange={(open) => {
+            if (!open) setActiveResult(null);
+          }}
+        >
+          <SheetContent
+            side="right"
+            className="w-full sm:max-w-md p-0 flex flex-col"
+          >
+            {activeResult && (
+              <>
+                <SheetHeader
+                  className="px-6 pt-6 pb-4 border-b border-border"
+                  style={{
+                    background:
+                      "linear-gradient(135deg, var(--card) 0%, oklch(0.97 0.02 210 / 0.6) 100%)",
+                  }}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="h-11 w-11 rounded-xl flex items-center justify-center text-teal-foreground shrink-0"
+                      style={{ backgroundColor: "var(--teal)" }}
+                    >
+                      <activeResult.icon className="h-5 w-5" />
+                    </div>
+                    <div>
+                      <SheetTitle className="text-lg">
+                        {activeResult.name}
+                      </SheetTitle>
+                      <SheetDescription>
+                        {activeResult.value} {activeResult.unit}
+                      </SheetDescription>
+                    </div>
+                  </div>
+                  <div className="mt-2">
+                    <Badge
+                      variant="outline"
+                      className={
+                        statusConfig[activeResult.status].className
+                      }
+                    >
+                      <span
+                        className={`h-1.5 w-1.5 rounded-full mr-1.5 ${
+                          statusConfig[activeResult.status].dotClass
+                        }`}
+                      />
+                      {statusConfig[activeResult.status].label}
+                    </Badge>
+                  </div>
+                </SheetHeader>
+
+                <ScrollArea className="flex-1 px-6 py-6">
+                  <div className="space-y-6">
+                    <section>
+                      <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground uppercase tracking-wide mb-2">
+                        <FlaskConical className="h-4 w-4 text-primary" />
+                        What this test measures
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {activeResult.measures}
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground uppercase tracking-wide mb-2">
+                        <HeartPulse className="h-4 w-4 text-primary" />
+                        Why it matters
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {activeResult.whyItMatters}
+                      </p>
+                    </section>
+
+                    <section>
+                      <h3 className="flex items-center gap-2 text-sm font-semibold text-foreground uppercase tracking-wide mb-2">
+                        <Info className="h-4 w-4 text-primary" />
+                        Your result, explained simply
+                      </h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        {activeResult.simpleExplanation}
+                      </p>
+                    </section>
+
+                    <div
+                      className="rounded-xl border border-amber-200 bg-amber-50 p-4"
+                    >
+                      <div className="flex items-start gap-2">
+                        <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+                        <p className="text-xs text-amber-800 leading-relaxed">
+                          This explanation is for general information only and is
+                          not a substitute for professional medical advice. Please
+                          consult your doctor before making any decisions about
+                          your health, diet, or medication.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </ScrollArea>
+              </>
+            )}
+          </SheetContent>
+        </Sheet>
       </div>
     </div>
   );
