@@ -277,6 +277,150 @@ function AiConsultationCompanionPage() {
             </div>
           ))}
         </div>
+
+        {showSummary && (
+          <div
+            className="mt-10 rounded-2xl border border-primary/20 bg-card p-1 animate-enter"
+            style={{
+              boxShadow: "var(--shadow-soft), 0 0 0 1px var(--primary) / 10%",
+              background:
+                "linear-gradient(135deg, var(--card) 0%, oklch(0.97 0.02 210 / 0.6) 100%)",
+            }}
+          >
+            <div className="rounded-xl bg-card/80 backdrop-blur-sm p-6 sm:p-8">
+              <div className="flex items-center gap-3 mb-6">
+                <div
+                  className="h-12 w-12 rounded-xl flex items-center justify-center text-primary-foreground"
+                  style={{ backgroundColor: "var(--primary)" }}
+                >
+                  <Sparkles className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-bold text-foreground">
+                    AI Consultation Summary
+                  </h2>
+                  <p className="text-sm text-muted-foreground">
+                    Generated for {demoPatient.name} • {demoPatient.date}
+                  </p>
+                </div>
+              </div>
+
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-6">
+                  <section className="animate-fade-in" style={{ animationDelay: "0.05s" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Stethoscope className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                        Today's Diagnosis
+                      </h3>
+                    </div>
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      {aiSummary.diagnosis}
+                    </p>
+                  </section>
+
+                  <section className="animate-fade-in" style={{ animationDelay: "0.1s" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <MessageSquare className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                        Doctor's Advice
+                      </h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-4">
+                      {aiSummary.advice.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section className="animate-fade-in" style={{ animationDelay: "0.15s" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Pill className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                        Medicine Explanations
+                      </h3>
+                    </div>
+                    <div className="space-y-3">
+                      {aiSummary.medicines.map((med) => (
+                        <div
+                          key={med.name}
+                          className="rounded-xl border border-border bg-background/60 p-3"
+                        >
+                          <p className="text-sm font-medium text-foreground">
+                            {med.name}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {med.explanation}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+                </div>
+
+                <div className="space-y-6">
+                  <section className="animate-fade-in" style={{ animationDelay: "0.2s" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Apple className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                        Lifestyle Recommendations
+                      </h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-4">
+                      {aiSummary.lifestyle.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section
+                    className="animate-fade-in rounded-xl border border-destructive/20 bg-destructive/5 p-4"
+                    style={{ animationDelay: "0.25s" }}
+                  >
+                    <div className="flex items-center gap-2 mb-2">
+                      <AlertTriangle className="h-4 w-4 text-destructive" />
+                      <h3 className="text-sm font-semibold text-destructive uppercase tracking-wide">
+                        Warning Signs
+                      </h3>
+                    </div>
+                    <ul className="space-y-2 text-sm text-muted-foreground list-disc pl-4">
+                      {aiSummary.warningSigns.map((item) => (
+                        <li key={item}>{item}</li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  <section className="animate-fade-in" style={{ animationDelay: "0.3s" }}>
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="h-4 w-4 text-primary" />
+                      <h3 className="text-sm font-semibold text-foreground uppercase tracking-wide">
+                        Next Appointment
+                      </h3>
+                    </div>
+                    <div className="rounded-xl border border-border bg-background/60 p-4 space-y-2">
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">Date:</span>{" "}
+                        {aiSummary.nextAppointment.date}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">Doctor:</span>{" "}
+                        {aiSummary.nextAppointment.doctor}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">Notes:</span>{" "}
+                        {aiSummary.nextAppointment.notes}
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-medium text-foreground">Tests:</span>{" "}
+                        {aiSummary.nextAppointment.tests}
+                      </p>
+                    </div>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
